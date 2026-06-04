@@ -1345,8 +1345,8 @@ function toggleVocal() {
   } else {
     recording = false;
     btn.classList.remove('recording');
-    btn.textContent = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;display:inline-block;vertical-align:-.15em"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>';
-    status.textContent = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;display:inline-block;vertical-align:-.15em"><polyline points="20 6 9 17 4 12"/></svg> Enregistrement terminé · ${Math.floor(vocalElapsed)}s`;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;display:inline-block;vertical-align:-.15em"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>';
+    status.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;display:inline-block;vertical-align:-.15em"><polyline points="20 6 9 17 4 12"/></svg> Enregistrement terminé · ${Math.floor(vocalElapsed)}s`;
     clearInterval(vocalInterval);
     state.decouverte.vocalDuration = vocalElapsed;
     setTimeout(generateIASynthese, 800);
@@ -2303,7 +2303,7 @@ function updateNavButtons() {
 
 // ──────────────────────────── TOAST ────────────────────────────
 function showToast(icon, msg) {
-  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastIcon').innerHTML = icon;
   document.getElementById('toastMsg').textContent = msg;
   const t = document.getElementById('toast');
   t.classList.add('show');
