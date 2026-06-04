@@ -615,9 +615,72 @@
     .welcome-title{font-size:1.7rem}
     .welcome-hero{padding:24px 20px}
   }
+
+  /* ── SÉLECTEUR DE MÉTIER ── */
+  .metier-overlay{
+    position:fixed;inset:0;z-index:9000;
+    background:linear-gradient(135deg,#1a2229 0%,#222b32 50%,#2a353e 100%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:40px 20px;overflow-y:auto;
+  }
+  .metier-overlay.hidden{display:none}
+  .metier-hero{text-align:center;max-width:720px;margin-bottom:36px}
+  .metier-eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#d4893a;margin-bottom:14px;padding:6px 14px;background:rgba(212,137,58,.1);border:1px solid rgba(212,137,58,.3);border-radius:30px}
+  .metier-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(1.6rem,3vw,2.4rem);color:#faf8f4;line-height:1.15;letter-spacing:-.02em;margin-bottom:14px}
+  .metier-title em{color:#d4893a;font-style:italic}
+  .metier-sub{font-size:.95rem;color:rgba(203,210,220,.65);line-height:1.65;max-width:560px;margin:0 auto}
+  .metier-grid{
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:16px;width:100%;max-width:1000px;
+  }
+  @media(max-width:900px){.metier-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.metier-grid{grid-template-columns:1fr}}
+  .metier-card{
+    background:rgba(34,43,50,.6);border:1px solid rgba(212,137,58,.18);border-radius:18px;
+    padding:24px 22px;cursor:pointer;transition:all .3s cubic-bezier(.23,1,.32,1);
+    text-align:left;position:relative;overflow:hidden;
+  }
+  .metier-card:hover{
+    border-color:rgba(212,137,58,.5);background:rgba(212,137,58,.08);
+    transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.4);
+  }
+  .metier-card-icon{
+    width:48px;height:48px;border-radius:12px;
+    background:rgba(212,137,58,.12);border:1px solid rgba(212,137,58,.3);
+    display:flex;align-items:center;justify-content:center;color:#d4893a;margin-bottom:14px;
+    transition:all .3s;
+  }
+  .metier-card:hover .metier-card-icon{background:#d4893a;color:#1a2229;border-color:#d4893a}
+  .metier-card-icon svg{width:24px;height:24px}
+  .metier-card-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:700;color:#faf8f4;margin-bottom:6px;letter-spacing:-.005em}
+  .metier-card-desc{font-size:.78rem;color:rgba(203,210,220,.55);line-height:1.55}
+  .metier-other{
+    margin-top:28px;text-align:center;font-size:.88rem;color:rgba(203,210,220,.55);
+    padding:14px 20px;background:rgba(34,43,50,.4);border:1px dashed rgba(212,137,58,.25);
+    border-radius:12px;max-width:560px;
+  }
+  .metier-other strong{color:#d4893a;font-weight:700}
+  .metier-other a{color:#d4893a;text-decoration:none;border-bottom:1px solid #d4893a;font-weight:600}
+
 </style>
 </head>
 <body>
+
+<!-- ═══ SÉLECTEUR DE MÉTIER ═══ -->
+<div class="metier-overlay" id="metierOverlay">
+  <div class="metier-hero">
+    <div class="metier-eyebrow">BTP Pro + · Démo</div>
+    <h1 class="metier-title">Choisissez <em>votre métier</em></h1>
+    <p class="metier-sub">L'app s'adapte à votre vocabulaire, vos prestations et vos critères de qualification. Sélectionnez le métier le plus proche du vôtre pour démarrer la démo.</p>
+  </div>
+  <div class="metier-grid" id="metierGrid">
+    <!-- Cartes injectées par JS -->
+  </div>
+  <div class="metier-other">
+    Votre métier n'est pas dans la liste ? <strong>D'autres démos sur demande.</strong><br>
+    <a href="mailto:laurence@lrenov-ia.studio?subject=Démo%20BTP%20Pro%20+%20pour%20mon%20métier&body=Bonjour%20Laurence%2C%0A%0AJe%20souhaite%20une%20démo%20BTP%20Pro%20%2B%20adaptée%20à%20mon%20métier%20%3A%0A%0A...%0A%0AMerci">laurence@lrenov-ia.studio</a>
+  </div>
+</div>
 
 <!-- ═══ TOPBAR ═══ -->
 <div class="topbar">
@@ -626,6 +689,7 @@
     <div class="topbar-title">BTP Pro <span style="color:#d4893a">+</span> <span>· Interface Commerciale</span></div>
   </div>
   <div class="topbar-right">
+    <button id="btnChangeMetier" onclick="showMetierSelector()" style="margin-right:8px;background:transparent;border:1px solid rgba(212,137,58,.4);color:#d4893a;padding:6px 14px;border-radius:8px;font-family:inherit;font-size:.75rem;font-weight:700;cursor:pointer;letter-spacing:.04em">← Changer de métier</button>
     <button id="btnCloseDemo" onclick="closeDemoFromIframe()" style="display:none;background:rgba(212,137,58,.15);border:1px solid rgba(212,137,58,.4);color:#d4893a;padding:6px 14px;border-radius:8px;font-family:inherit;font-size:.75rem;font-weight:700;cursor:pointer;letter-spacing:.04em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;display:inline-block;vertical-align:-.15em"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Fermer la démo</button>
     <div class="badge">RDV en cours</div>
     <div id="dateNow"></div>
@@ -1109,55 +1173,450 @@ let state = {
 // Dal'Alu, Toitures 33, Aluhome, Compagnie des Bâtiments Gironde (2025-2026)
 // Grille démo — à personnaliser par client en production
 // tvaDefault = taux par défaut, modifiable ligne par ligne (5.5 / 10 / 20)
-const TARIFS = {
-  'gouttiere': { label:'Gouttière alu (continu sans soudure)', unit:'ml', prix:50,  tvaDefault:10 },
-  'descente':  { label:'Descente EP alu',                       unit:'ml', prix:36,  tvaDefault:10 },
-  'entourage': { label:'Entourage fenêtre (tableaux + appui)',  unit:'u',  prix:180, tvaDefault:10 },
-  'bandeau':   { label:'Bandeau alu (planche de rive)',         unit:'ml', prix:41,  tvaDefault:10 },
-  'autre':     { label:'Autre prestation',                       unit:'u',  prix:0,   tvaDefault:10 }
+// ═══════════════════════════════════════════════════════
+//  CONFIGURATION PAR MÉTIER — chaque métier a sa propre grille
+// ═══════════════════════════════════════════════════════
+const METIERS = {
+
+  // ─── GOUTTIÈRES ALU (démo d'origine) ───
+  gouttieres_alu: {
+    nom: 'Gouttières alu',
+    desc: 'Gouttières alu continu sans soudure, descentes EP',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 4l9 8M5 10v10h14V10M9 20v-6h6v6"/></svg>',
+    prestations: [
+      'Gouttières alu (pose neuve)',
+      'Remplacement gouttières',
+      'Descentes EP',
+      'Bandeaux alu',
+      'Pare-feuilles intégré',
+      'Autre'
+    ],
+    tarifs: {
+      'gouttiere': { label:'Gouttière alu (continu sans soudure)', unit:'ml', prix:50,  tvaDefault:10 },
+      'descente':  { label:'Descente EP alu',                       unit:'ml', prix:36,  tvaDefault:10 },
+      'bandeau':   { label:'Bandeau alu (planche de rive)',         unit:'ml', prix:41,  tvaDefault:10 },
+      'entourage': { label:'Entourage fenêtre (tableaux + appui)',  unit:'u',  prix:180, tvaDefault:10 },
+      'autre':     { label:'Autre prestation',                       unit:'u',  prix:0,   tvaDefault:10 }
+    },
+    options: {
+      parefeuille:        { label:'Pare-feuilles intégré',                mode:'ml',          prix:14,  tvaDefault:10, defaultChecked:true,  detail:'+14 €/ml sur les gouttières alu — argument fort partout : arbres, feuilles, débris, nids' },
+      entretienAnnuel:    { label:'Forfait entretien annuel',              mode:'forfait',     prix:180, tvaDefault:10, defaultChecked:true,  detail:'180 €/an — passage annuel : nettoyage + vérif fixations' },
+      nettoyageGouttiere: { label:'Nettoyage de gouttières (ponctuel)',    mode:'forfait',     prix:180, tvaDefault:10, defaultChecked:false, detail:'Forfait 180 € — intervention demi-journée, démoussage + curage' },
+      mousticlic:         { label:'MoustiClic',                            mode:'forfait',     prix:290, tvaDefault:20, defaultChecked:false, detail:'Forfait 290 € — protection anti-moustiques (système MoustiClic)' },
+      nacelle:            { label:'Forfait nacelle (journée)',             mode:'forfait',     prix:410, tvaDefault:10, defaultChecked:false, detail:'+410 € — nacelle articulée 16-20m pour pose en hauteur > 6m' },
+      depose:             { label:'Dépose anciennes gouttières',           mode:'ml',          prix:8,   tvaDefault:10, defaultChecked:false, detail:'+8 €/ml — PVC ou zinc, évacuation déchetterie incluse' }
+    },
+    checklist: [
+      'Amiante suspectée',
+      'Hauteur de pose > 6m',
+      'Dépose anciennes gouttières',
+      'Coloris RAL validé',
+      'Accès chantier facile',
+      'Échafaudage requis',
+      'Travaux toiture en parallèle',
+      'Devis comparatif déjà reçu'
+    ],
+    exempleChantier: 'remplacement gouttières alu en continu sans soudure',
+    exempleClient: 'M. et Mme Dupont',
+    exempleAdresse: '12 rue des Lilas, 33290 Blanquefort'
+  },
+
+  // ─── MENUISIER ALU / PVC ───
+  menuisier: {
+    nom: 'Menuisier alu / PVC',
+    desc: 'Fenêtres, baies vitrées, portes, volets',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="4" y1="12" x2="20" y2="12"/></svg>',
+    prestations: [
+      'Fenêtre alu 120×140',
+      'Fenêtre PVC 100×120',
+      'Baie vitrée coulissante 240×215',
+      'Porte d\'entrée alu',
+      'Volet roulant motorisé',
+      'Pose seule (fourniture client)',
+      'Autre'
+    ],
+    tarifs: {
+      'fenetre_alu':   { label:'Fenêtre alu 2 vantaux 120×140',     unit:'u',  prix:980,  tvaDefault:10 },
+      'fenetre_pvc':   { label:'Fenêtre PVC 2 vantaux 100×120',     unit:'u',  prix:520,  tvaDefault:10 },
+      'baie':          { label:'Baie vitrée alu coulissante 240×215', unit:'u', prix:2400, tvaDefault:10 },
+      'porte':         { label:'Porte d\'entrée alu 90×215',         unit:'u',  prix:2900, tvaDefault:10 },
+      'volet':         { label:'Volet roulant motorisé (par baie)', unit:'u',  prix:680,  tvaDefault:10 },
+      'autre':         { label:'Autre prestation',                   unit:'u',  prix:0,    tvaDefault:10 }
+    },
+    options: {
+      depose:          { label:'Dépose ancienne menuiserie',         mode:'forfait', prix:180, tvaDefault:10, defaultChecked:true,  detail:'180 €/baie — évacuation déchetterie incluse' },
+      finition:        { label:'Finitions intérieures (plâtre/peinture)', mode:'forfait', prix:120, tvaDefault:10, defaultChecked:true, detail:'120 €/baie — reprise tableaux + appui' },
+      moustiquaire:    { label:'Moustiquaire enroulable',             mode:'forfait', prix:240, tvaDefault:20, defaultChecked:false, detail:'240 €/baie — TVA 20% (vente produit)' },
+      seuilPMR:        { label:'Seuil PMR (porte d\'entrée)',         mode:'forfait', prix:180, tvaDefault:10, defaultChecked:false, detail:'180 € — accessibilité norme PMR' },
+      vitrage:         { label:'Surcoût triple vitrage',             mode:'forfait', prix:380, tvaDefault:10, defaultChecked:false, detail:'+380 €/baie — performance thermique renforcée' },
+      domotique:       { label:'Pack domotique volets',              mode:'forfait', prix:490, tvaDefault:20, defaultChecked:false, detail:'490 € — centralisation + programmation' }
+    },
+    checklist: [
+      'Existant en bois / PVC / alu ?',
+      'Coloris RAL validé',
+      'Type d\'ouverture confirmé',
+      'Dépose ancienne menuiserie',
+      'Reprise finitions intérieures',
+      'Accès chantier facile',
+      'Volet roulant intégré',
+      'Devis comparatif déjà reçu'
+    ],
+    exempleChantier: 'remplacement de 3 fenêtres alu + 1 baie vitrée coulissante',
+    exempleClient: 'M. et Mme Martin',
+    exempleAdresse: '8 avenue des Tilleuls, 33290 Blanquefort'
+  },
+
+  // ─── MENUISIER INTÉRIEUR / BOIS ───
+  menuisier_bois: {
+    nom: 'Menuisier intérieur / bois',
+    desc: 'Escaliers, parquet, agencement, dressing, placards',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="9" y1="4" x2="9" y2="20"/></svg>',
+    prestations: [
+      'Escalier bois sur mesure',
+      'Parquet massif (par m²)',
+      'Parquet contrecollé (par m²)',
+      'Dressing sur mesure',
+      'Placard intégré',
+      'Agencement cuisine (forfait)',
+      'Autre'
+    ],
+    tarifs: {
+      'escalier':      { label:'Escalier bois sur mesure (10-13 marches)', unit:'u',  prix:5200, tvaDefault:10 },
+      'parquet_mass':  { label:'Parquet massif chêne (pose+fourn., par m²)', unit:'m²', prix:95,  tvaDefault:10 },
+      'parquet_ccol':  { label:'Parquet contrecollé (pose+fourn., par m²)', unit:'m²', prix:62,  tvaDefault:10 },
+      'dressing':      { label:'Dressing sur mesure (par ml)',           unit:'ml', prix:680, tvaDefault:10 },
+      'placard':       { label:'Placard intégré (par u)',                unit:'u',  prix:1290, tvaDefault:10 },
+      'cuisine':       { label:'Agencement cuisine (forfait)',           unit:'u',  prix:8900, tvaDefault:10 },
+      'autre':         { label:'Autre prestation',                         unit:'u',  prix:0,    tvaDefault:10 }
+    },
+    options: {
+      depose:          { label:'Dépose existant + évacuation',            mode:'forfait', prix:380, tvaDefault:10, defaultChecked:true, detail:'380 € — démontage + déchetterie' },
+      finition:        { label:'Vitrification / huile / lasure',          mode:'forfait', prix:480, tvaDefault:10, defaultChecked:true,  detail:'480 € — finition protectrice (parquet/escalier)' },
+      sous_couche:     { label:'Sous-couche acoustique parquet',          mode:'forfait', prix:280, tvaDefault:10, defaultChecked:false, detail:'280 € — isolation phonique sous parquet' },
+      plinthes:        { label:'Plinthes assorties',                      mode:'forfait', prix:380, tvaDefault:10, defaultChecked:false, detail:'380 € — fourniture + pose pour pièce moyenne' },
+      eclairage_led:   { label:'Éclairage LED intégré (dressing/placard)', mode:'forfait', prix:290, tvaDefault:20, defaultChecked:false, detail:'290 € — bandeaux LED + alim' }
+    },
+    checklist: [
+      'Existant en bois / stratifié / autre',
+      'Sol plan (niveau OK)',
+      'Hauteur sous plafond > 2,40 m',
+      'Essence de bois validée',
+      'Finition choisie (vitrif/huile/laser)',
+      'Accès chantier facile',
+      'Pièce occupée pendant travaux',
+      'Devis comparatif déjà reçu'
+    ],
+    exempleChantier: 'pose parquet massif chêne salon + couloir 35 m²',
+    exempleClient: 'M. et Mme Robert',
+    exempleAdresse: '14 rue du Moulin, 33290 Blanquefort'
+  },
+
+  // ─── PLOMBIER-CHAUFFAGISTE ───
+  plombier: {
+    nom: 'Plombier · Chauffagiste',
+    desc: 'Chaudière, PAC, chauffe-eau, salle de bain',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M9 5h6M9 8v6a3 3 0 0 0 6 0V8M9 14v4a3 3 0 0 0 6 0v-4"/></svg>',
+    prestations: [
+      'Chaudière gaz à condensation',
+      'PAC air/eau',
+      'Chauffe-eau thermodynamique 250L',
+      'Rénovation salle de bain complète',
+      'Douche à l\'italienne',
+      'Dépannage / SAV',
+      'Autre'
+    ],
+    tarifs: {
+      'chaudiere':     { label:'Chaudière gaz à condensation (pose+fourniture)', unit:'u', prix:3200, tvaDefault:5.5 },
+      'pac':           { label:'PAC air/eau 8 kW (pose+fourniture)',   unit:'u', prix:8900, tvaDefault:5.5 },
+      'cet':           { label:'Chauffe-eau thermodynamique 250L',      unit:'u', prix:2400, tvaDefault:5.5 },
+      'sdb':           { label:'Rénovation SDB complète (forfait)',     unit:'u', prix:6800, tvaDefault:10 },
+      'douche_ital':   { label:'Douche à l\'italienne (pose)',          unit:'u', prix:1900, tvaDefault:10 },
+      'autre':         { label:'Autre prestation',                       unit:'u', prix:0,    tvaDefault:10 }
+    },
+    options: {
+      depose:          { label:'Dépose ancien équipement + évacuation', mode:'forfait', prix:280, tvaDefault:10, defaultChecked:true, detail:'280 € — démontage + déchetterie' },
+      entretienAnnuel: { label:'Contrat d\'entretien annuel',             mode:'forfait', prix:180, tvaDefault:20, defaultChecked:true, detail:'180 €/an — visite annuelle + pièces d\'usure' },
+      maPrimeRenov:    { label:'Dossier MaPrimeRénov\' (assistance)',     mode:'forfait', prix:280, tvaDefault:20, defaultChecked:false, detail:'280 € — montage dossier + suivi versement' },
+      thermostatConn:  { label:'Thermostat connecté',                    mode:'forfait', prix:380, tvaDefault:20, defaultChecked:false, detail:'380 € — pilotage à distance' },
+      antitartre:      { label:'Adoucisseur d\'eau',                    mode:'forfait', prix:1490, tvaDefault:10, defaultChecked:false, detail:'1 490 € — installation + raccordement' }
+    },
+    checklist: [
+      'Énergie existante (gaz/fioul/élec)',
+      'Conduit évacuation conforme',
+      'Espace technique suffisant',
+      'Dépose ancien équipement',
+      'Éligibilité MaPrimeRénov\'',
+      'Accès chantier facile',
+      'Contrat entretien souhaité',
+      'Devis comparatif déjà reçu'
+    ],
+    exempleChantier: 'remplacement chaudière gaz par PAC air/eau',
+    exempleClient: 'M. et Mme Lefèvre',
+    exempleAdresse: '15 chemin des Vignes, 33290 Blanquefort'
+  },
+
+  // ─── ÉLECTRICIEN ───
+  electricien: {
+    nom: 'Électricien',
+    desc: 'Tableau, rénovation, mise aux normes NF C 15-100',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    prestations: [
+      'Rénovation tableau électrique',
+      'Mise aux normes NF C 15-100',
+      'Création point lumineux',
+      'Ajout prises supplémentaires',
+      'Borne de recharge VE 7kW',
+      'IRVE / domotique',
+      'Autre'
+    ],
+    tarifs: {
+      'tableau':       { label:'Tableau électrique (rénovation complète)', unit:'u', prix:1890, tvaDefault:10 },
+      'point_lumineux':{ label:'Point lumineux (fourniture + pose)',    unit:'u', prix:140, tvaDefault:10 },
+      'prise':         { label:'Prise 16A supplémentaire',                unit:'u', prix:110, tvaDefault:10 },
+      'borne_ve':      { label:'Borne de recharge VE 7 kW (Green\'Up)',  unit:'u', prix:1290, tvaDefault:5.5 },
+      'consuel':       { label:'Attestation CONSUEL',                     unit:'u', prix:180, tvaDefault:20 },
+      'autre':         { label:'Autre prestation',                         unit:'u', prix:0,   tvaDefault:10 }
+    },
+    options: {
+      depose:          { label:'Dépose ancien tableau',                  mode:'forfait', prix:180, tvaDefault:10, defaultChecked:true, detail:'180 € — démontage + évacuation' },
+      saignee:         { label:'Saignées encastrées (plâtre)',           mode:'forfait', prix:380, tvaDefault:10, defaultChecked:false, detail:'380 €/forfait — rebouchage inclus' },
+      domotique:       { label:'Pack domotique de base',                 mode:'forfait', prix:890, tvaDefault:20, defaultChecked:false, detail:'890 € — box + 4 modules connectés' },
+      delesteur:       { label:'Délesteur de charge',                    mode:'forfait', prix:240, tvaDefault:10, defaultChecked:false, detail:'240 € — protection abonnement EDF' },
+      parafoudre:      { label:'Parafoudre type 2',                      mode:'forfait', prix:290, tvaDefault:10, defaultChecked:false, detail:'290 € — protection installation' }
+    },
+    checklist: [
+      'Installation > 15 ans (vétusté)',
+      'Conformité NF C 15-100',
+      'Compteur Linky en place',
+      'Espace tableau suffisant',
+      'Saignées prévues',
+      'Diagnostic électrique fourni',
+      'Attestation CONSUEL nécessaire',
+      'Devis comparatif déjà reçu'
+    ],
+    exempleChantier: 'rénovation complète tableau + mise aux normes NF C 15-100',
+    exempleClient: 'M. et Mme Garcia',
+    exempleAdresse: '22 rue de la Forêt, 33290 Blanquefort'
+  },
+
+  // ─── PLAQUISTE / PEINTRE ───
+  plaquiste: {
+    nom: 'Plaquiste · Peintre',
+    desc: 'Cloisons, doublage, plafonds, peinture',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3zM3 9h18M9 21V9"/></svg>',
+    prestations: [
+      'Cloison BA13 (par m²)',
+      'Doublage thermique (par m²)',
+      'Plafond suspendu (par m²)',
+      'Peinture monocouche (par m²)',
+      'Peinture double couche (par m²)',
+      'Enduit de lissage',
+      'Autre'
+    ],
+    tarifs: {
+      'cloison':       { label:'Cloison BA13 (fourniture+pose, par m²)', unit:'m²', prix:48,  tvaDefault:10 },
+      'doublage':      { label:'Doublage thermique 10+100 (par m²)',     unit:'m²', prix:58,  tvaDefault:10 },
+      'plafond':       { label:'Plafond BA13 suspendu (par m²)',         unit:'m²', prix:62,  tvaDefault:10 },
+      'peinture_mono': { label:'Peinture monocouche acrylique (par m²)', unit:'m²', prix:18,  tvaDefault:10 },
+      'peinture_doub': { label:'Peinture double couche (par m²)',         unit:'m²', prix:26,  tvaDefault:10 },
+      'autre':         { label:'Autre prestation',                         unit:'u',  prix:0,   tvaDefault:10 }
+    },
+    options: {
+      enduit:          { label:'Enduit de lissage avant peinture',       mode:'forfait', prix:380, tvaDefault:10, defaultChecked:true,  detail:'380 € — préparation soignée avant peinture' },
+      depose:          { label:'Dépose ancien revêtement',               mode:'forfait', prix:280, tvaDefault:10, defaultChecked:false, detail:'280 €/pièce — papier peint, toile…' },
+      protection:      { label:'Protection sol + mobilier',              mode:'forfait', prix:180, tvaDefault:10, defaultChecked:true, detail:'180 €/forfait — bâches + adhésifs' },
+      isolationPhon:   { label:'Surcoût isolation phonique',             mode:'forfait', prix:390, tvaDefault:10, defaultChecked:false, detail:'390 € — laine de roche densifiée' },
+      ragreage:        { label:'Ragréage sol (forfait)',                 mode:'forfait', prix:480, tvaDefault:10, defaultChecked:false, detail:'480 € — préparation sol avant revêtement' }
+    },
+    checklist: [
+      'Existant : papier peint / toile / autre',
+      'Hauteur sous plafond > 2,40 m',
+      'Mobilier à protéger',
+      'Dépose revêtement existant',
+      'Reprise réseaux électriques',
+      'Plinthes à conserver',
+      'Pièces occupées pendant travaux',
+      'Devis comparatif déjà reçu'
+    ],
+    exempleChantier: 'rénovation cloisons + peinture séjour 35 m²',
+    exempleClient: 'M. et Mme Petit',
+    exempleAdresse: '5 allée des Pins, 33290 Blanquefort'
+  },
+
+  // ─── CARRELEUR ───
+  carreleur: {
+    nom: 'Carreleur',
+    desc: 'Sol, faïence, douche à l\'italienne, terrasse',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>',
+    prestations: [
+      'Carrelage sol grand format (par m²)',
+      'Faïence murale (par m²)',
+      'Douche à l\'italienne (forfait)',
+      'Terrasse extérieure (par m²)',
+      'Plinthes (par ml)',
+      'Joints époxy',
+      'Autre'
+    ],
+    tarifs: {
+      'sol':           { label:'Carrelage sol grand format (par m²)',   unit:'m²', prix:62,  tvaDefault:10 },
+      'faience':       { label:'Faïence murale (par m²)',                unit:'m²', prix:54,  tvaDefault:10 },
+      'douche_ital':   { label:'Douche à l\'italienne (forfait pose)',  unit:'u',  prix:1490, tvaDefault:10 },
+      'terrasse':      { label:'Carrelage terrasse extérieure (par m²)', unit:'m²', prix:75,  tvaDefault:10 },
+      'plinthes':      { label:'Plinthes (par ml)',                       unit:'ml', prix:14,  tvaDefault:10 },
+      'autre':         { label:'Autre prestation',                         unit:'u',  prix:0,   tvaDefault:10 }
+    },
+    options: {
+      ragreage:        { label:'Ragréage sol avant pose',                mode:'forfait', prix:480, tvaDefault:10, defaultChecked:true,  detail:'480 € — préparation indispensable si sol irrégulier' },
+      depose:          { label:'Dépose ancien carrelage + évacuation',   mode:'forfait', prix:580, tvaDefault:10, defaultChecked:false, detail:'580 € — déchetterie incluse' },
+      joints_epoxy:    { label:'Joints époxy (surcoût)',                 mode:'forfait', prix:380, tvaDefault:10, defaultChecked:false, detail:'380 € — résistance accrue (cuisine, SDB)' },
+      etancheite:      { label:'Étanchéité SPEC (douche)',               mode:'forfait', prix:380, tvaDefault:10, defaultChecked:true,  detail:'380 € — système d\'étanchéité sous carrelage' },
+      siphon_lineaire: { label:'Caniveau de douche linéaire',            mode:'forfait', prix:280, tvaDefault:10, defaultChecked:false, detail:'280 € — fourniture + pose' }
+    },
+    checklist: [
+      'Existant : carrelage / parquet / béton',
+      'Sol plan (à vérifier au niveau)',
+      'Ragréage nécessaire',
+      'Dépose existant prévue',
+      'Étanchéité douche conforme',
+      'Calepinage validé avec client',
+      'Pièce humide (cuisine/SDB)',
+      'Devis comparatif déjà reçu'
+    ],
+    exempleChantier: 'pose carrelage sol grand format séjour + cuisine 40 m²',
+    exempleClient: 'M. et Mme Bernard',
+    exempleAdresse: '18 rue des Lavandes, 33290 Blanquefort'
+  },
+
+  // ─── ENTREPRISE DE RÉNOVATION GÉNÉRALE ───
+  renovation_generale: {
+    nom: 'Entreprise de rénovation générale',
+    desc: 'Multi-corps, tous corps d\'état, rénovation complète',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20M5 20V10l7-7 7 7v10M9 20v-5h6v5"/><path d="M9 10h6"/></svg>',
+    prestations: [
+      'Rénovation complète appartement (forfait)',
+      'Rénovation complète maison (forfait)',
+      'Rénovation salle de bain (forfait)',
+      'Rénovation cuisine (forfait)',
+      'Aménagement combles',
+      'Extension / surélévation',
+      'Autre'
+    ],
+    tarifs: {
+      'reno_appart':   { label:'Rénovation complète appartement (par m²)', unit:'m²', prix:850, tvaDefault:10 },
+      'reno_maison':   { label:'Rénovation complète maison (par m²)',     unit:'m²', prix:980, tvaDefault:10 },
+      'reno_sdb':      { label:'Rénovation SDB complète (forfait)',       unit:'u',  prix:9800, tvaDefault:10 },
+      'reno_cuisine':  { label:'Rénovation cuisine complète (forfait)',   unit:'u',  prix:14800, tvaDefault:10 },
+      'combles':       { label:'Aménagement combles (par m²)',            unit:'m²', prix:1200, tvaDefault:10 },
+      'autre':         { label:'Autre prestation',                          unit:'u',  prix:0,    tvaDefault:10 }
+    },
+    options: {
+      maitrise_oeuvre: { label:'Maîtrise d\'œuvre + coordination',         mode:'forfait', prix:3500, tvaDefault:20, defaultChecked:true,  detail:'3 500 € — pilotage chantier + coordination corps d\'état' },
+      depose_globale:  { label:'Dépose globale + évacuation',              mode:'forfait', prix:1800, tvaDefault:10, defaultChecked:true,  detail:'1 800 € — démolition + bennes' },
+      maPrimeRenov:    { label:'Dossier MaPrimeRénov\' / aides (assistance)', mode:'forfait', prix:580, tvaDefault:20, defaultChecked:false, detail:'580 € — montage dossier + suivi versements' },
+      bureau_etudes:   { label:'Bureau d\'études structure',               mode:'forfait', prix:1900, tvaDefault:20, defaultChecked:false, detail:'1 900 € — calculs structure si extension/surélévation' },
+      perm_construire: { label:'Permis de construire (montage dossier)',   mode:'forfait', prix:1490, tvaDefault:20, defaultChecked:false, detail:'1 490 € — plans + démarches' },
+      garantie_decen:  { label:'Garantie décennale étendue',               mode:'forfait', prix:890, tvaDefault:20, defaultChecked:false, detail:'890 € — extension couverture sur 10 ans' }
+    },
+    checklist: [
+      'État général du bâti (à diagnostiquer)',
+      'Amiante / plomb suspectés',
+      'Permis de construire nécessaire',
+      'Étude structure (extension)',
+      'Éligibilité MaPrimeRénov\' / CEE',
+      'Maîtrise d\'œuvre souhaitée',
+      'Logement occupé pendant travaux',
+      'Devis comparatif déjà reçu'
+    ],
+    exempleChantier: 'rénovation complète maison 110 m² (cuisine + SDB + sols + peinture)',
+    exempleClient: 'M. et Mme Lambert',
+    exempleAdresse: '7 place du Marché, 33290 Blanquefort'
+  }
 };
 
-// Options commerciales (HT) — toujours visibles dans le devis
-// Nouveau mode 'm2_toiture' = qty calculée depuis ml gouttière × rampant moyen
-const OPTIONS = {
-  parefeuille:        { label:'Pare-feuilles intégré',                mode:'ml',          prix:14,  tvaDefault:10, defaultChecked:true,  detail:'+14 €/ml sur les gouttières alu — argument fort partout : arbres, feuilles, débris, nids' },
-  entretienAnnuel:    { label:'Forfait entretien annuel',              mode:'forfait',     prix:180, tvaDefault:10, defaultChecked:true,  detail:'180 €/an — passage annuel : nettoyage gouttières + vérif pare-feuille + contrôle fuites & fixations. Garantit la durabilité de la structure.' },
-  nettoyageGouttiere: { label:'Nettoyage de gouttières (ponctuel)',    mode:'forfait',     prix:180, tvaDefault:10, defaultChecked:false, detail:'Forfait 180 € — intervention demi-journée, démoussage + curage' },
-  nettoyageToiture:   { label:'Nettoyage de toiture',                  mode:'forfait',     prix:450, tvaDefault:10, defaultChecked:false, detail:'Forfait 450 € — haute pression + démoussage, surface jusqu\'à 100 m²' },
-  hydrofuge:          { label:'Hydrofuge toiture',                     mode:'m2_toiture',  prix:14,  tvaDefault:10, defaultChecked:false, detail:'14 €/m² — perlant incolore, durée 5-8 ans. Surface estimée depuis le linéaire de gouttières.' },
-  mousticlic:         { label:'MoustiClic',                            mode:'forfait',     prix:290, tvaDefault:20, defaultChecked:false, detail:'Forfait 290 € — protection anti-moustiques (système Mousti\'clic). TVA 20% par défaut (vente produit).' },
-  auditEP:            { label:'Audit évacuations EP',                  mode:'forfait',     prix:180, tvaDefault:20, defaultChecked:false, detail:'Forfait 180 € — diagnostic complet du réseau d\'évacuation. TVA 20% par défaut (prestation hors travaux).' },
-  nacelle:            { label:'Forfait nacelle (journée)',             mode:'forfait',     prix:410, tvaDefault:10, defaultChecked:false, detail:'+410 € — nacelle articulée 16-20m pour pose en hauteur > 6m' },
-  depose:             { label:'Dépose anciennes gouttières',           mode:'ml',          prix:8,   tvaDefault:10, defaultChecked:false, detail:'+8 €/ml — PVC ou zinc, évacuation déchetterie incluse' }
-};
+// ─── Métier actif (peut être modifié via le sélecteur) ───
+let METIER_ACTIF = 'gouttieres_alu';  // défaut
 
-// Ratios métier (démo)
+// ─── Variables tarifaires dynamiques (réassignées au changement de métier) ───
+let TARIFS = METIERS.gouttieres_alu.tarifs;
+let OPTIONS = METIERS.gouttieres_alu.options;
+let CHECKLIST = METIERS.gouttieres_alu.checklist;
+
+// ─── Ratios métier (gardés pour compatibilité avec le code existant) ───
 const RATIOS = {
-  // Surface toiture estimée = ml gouttières × largeur rampant moyen (4m)
-  // Hypothèse : gouttières sur un seul versant rectiligne (pavillon classique)
-  // À ajuster selon configuration (×2 si gouttières sur 2 versants)
   rampantMoyen: 4,
-  // Ventes additionnelles (démo)
-  prixNettoyageM2: 11,    // €/m² nettoyage haute pression + démoussage
-  prixHydrofugeM2: 14,    // €/m² hydrofuge perlant incolore
-  // Forfaits indépendants du métrage
+  prixNettoyageM2: 11,
+  prixHydrofugeM2: 14,
   prixMoustiClic: 290,
   prixAuditEP: 180
 };
 
-const CHECKLIST = [
-  'Amiante suspectée',
-  'Hauteur de pose > 6m',
-  'Dépose anciennes gouttières',
-  'Coloris RAL validé',
-  'Accès chantier facile',
-  'Échafaudage requis',
-  'Travaux toiture en parallèle',
-  'Devis comparatif déjà reçu'
-];
+// ──────────────────────────── SÉLECTEUR DE MÉTIER ────────────────────────────
+function renderMetierGrid() {
+  const grid = document.getElementById('metierGrid');
+  if (!grid) return;
+  grid.innerHTML = Object.entries(METIERS).map(([key, m]) => `
+    <button class="metier-card" onclick="selectMetier('${key}')">
+      <div class="metier-card-icon">${m.icon}</div>
+      <div class="metier-card-name">${m.nom}</div>
+      <div class="metier-card-desc">${m.desc}</div>
+    </button>
+  `).join('');
+}
+
+function selectMetier(key) {
+  if (!METIERS[key]) return;
+  METIER_ACTIF = key;
+  const m = METIERS[key];
+  TARIFS = m.tarifs;
+  OPTIONS = m.options;
+  CHECKLIST = m.checklist;
+
+  // Persiste le choix
+  try { localStorage.setItem('btp_pro_metier', key); } catch(e){}
+
+  // Met à jour le menu déroulant des prestations
+  const sel = document.getElementById('f-type');
+  if (sel) {
+    sel.innerHTML = '<option value="">— Choisir —</option>' +
+      m.prestations.map(p => `<option value="${p}">${p}</option>`).join('');
+  }
+
+  // Re-render checklist + options + cotes
+  renderChecklist();
+  renderOptions();
+  renderCotes();
+  recalc();
+
+  // Cache l'overlay
+  document.getElementById('metierOverlay').classList.add('hidden');
+}
+
+function showMetierSelector() {
+  document.getElementById('metierOverlay').classList.remove('hidden');
+}
+
+function backToHome() {
+  // Si on est dans une iframe (lancé depuis btp-pro.html) → fermer la modal
+  if (window.self !== window.top) {
+    closeDemoFromIframe();
+  } else {
+    // Sinon → réafficher le sélecteur de métier
+    showMetierSelector();
+  }
+}
 
 // ──────────────────────────── INIT ────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
+  renderMetierGrid();
+
+  // Si un métier a été choisi précédemment, on l'applique et on masque le sélecteur
+  let savedMetier = null;
+  try { savedMetier = localStorage.getItem('btp_pro_metier'); } catch(e){}
+  if (savedMetier && METIERS[savedMetier]) {
+    selectMetier(savedMetier);
+  }
+  // sinon l'overlay reste visible
+
   parseURL();
   loadState();
   renderClient();
@@ -1360,8 +1819,10 @@ function generateIASynthese() {
     const c = state.client;
     const checks = Object.entries(state.decouverte.checks)
       .filter(([k,v]) => v).map(([k]) => CHECKLIST[k]);
+    const metierInfo = METIERS[METIER_ACTIF];
+    const prestationFinale = c.type ? c.type.toLowerCase() : metierInfo.exempleChantier;
     const synthese = `<strong>Compte-rendu RDV — ${c.nom}</strong> · ${new Date().toLocaleDateString('fr-FR')}<br><br>
-Le client souhaite ${c.type ? c.type.toLowerCase() : 'un projet de menuiserie alu'} sur sa propriété située au ${c.adresse}.
+Le client souhaite ${prestationFinale} sur sa propriété située au ${c.adresse}.
 ${checks.length ? '<br><br><strong>Points de vigilance identifiés :</strong> ' + checks.join(', ') + '.' : ''}
 <br><br>Le rendez-vous a permis de cadrer le périmètre des travaux. Une proposition commerciale est à établir suite aux métrés réalisés.`;
     ia.innerHTML = synthese;
